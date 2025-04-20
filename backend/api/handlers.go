@@ -4,19 +4,19 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"flowwatch/fetcher"
+	"github.com/jakefurlong/flowwatch/backend/fetcher"
 )
 
 func GetCurrentRiverData(w http.ResponseWriter, r *http.Request) {
 	site := r.URL.Query().Get("site")
 	if site == "" {
-		http.Error(w, "Missing site parameter", http.StatusBadRequest)
+		http.Error(w, "Missing 'site' query param", http.StatusBadRequest)
 		return
 	}
 
-	data, err := fetcher.GetRiverData(site)
+	data, err := fetcher.FetchRiverData(site)
 	if err != nil {
-		http.Error(w, "Error fetching data", http.StatusInternalServerError)
+		http.Error(w, "Error fetching data: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
